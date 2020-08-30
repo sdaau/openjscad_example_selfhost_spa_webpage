@@ -4,7 +4,7 @@ This is an example of an OpenJSCAD-based SPA webpage (see [Firefox 80 screenshot
 
 * An application that can run from a local web server (see also: [Getting web JSCAD example to work locally · Issue #632 · jscad/OpenJSCAD.org](https://github.com/jscad/OpenJSCAD.org/issues/632))
 * Loading of a `.jscad` script through [XHR](https://en.wikipedia.org/wiki/XMLHttpRequest) (which triggers [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) security)
-* Passing of a 3D object parameter through a query string, and recalculation of 3D scene based on it
+* Passing of a 3D object (numeric) parameter through a query string, and recalculation of 3D scene based on it
 * Patching of the `min.js` engine (required since OpenJSCAD is a library built with [Node.js](https://en.wikipedia.org/wiki/Node.js) packages, and then "bundled" with [browserify](http://browserify.org/)), so that data can be exchanged between the browser `window` and the .jscad [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) (see [openjscad_min_js_231d3c6.patch](https://github.com/sdaau/openjscad_example_selfhost_spa_webpage/blob/master/_files/openjscad_min_js_231d3c6.patch))
 * Animation (based on [OpenJSCAD clock animation - profOnno/clock.jscad · GitHub](https://gist.github.com/profOnno/43871c166115540ee8b843a0f769f534); see also [Animation? Does $t work in OpenJSCAD ? · Issue #38 · jscad/OpenJSCAD.org](https://github.com/jscad/OpenJSCAD.org/issues/38))
 * 2D projection of a 3D object, converted to SVG using OpenJSCAD's serializer, and adding it to the HTML document for display (see also [Enhancement: Projections · Issue #99 · jscad/OpenJSCAD.org](https://github.com/jscad/OpenJSCAD.org/issues/99))
@@ -36,7 +36,7 @@ bash generate_example.sh
 
 In this case, the folder with the webpage example will be in `/tmp/openjscad_example_selfhost_spa_webpage_git/build_openjscad_spa/example_webpage`
 
-Or - run the commands in the Bash script manually - which is presented in the next section.
+Or -- run the commands in the Bash script manually, which is presented in the next section.
 
 
 ## Manually run commands
@@ -112,13 +112,13 @@ wget -q -O example_webpage/example_webpage_init.js https://raw.githubusercontent
 wget -q -O example_webpage/example_scene.jscad https://raw.githubusercontent.com/sdaau/openjscad_example_selfhost_spa_webpage/master/_files/example_scene.jscad
 ```
 
-Get the openjscad min.js patch, and then apply it
+Get the OpenJSCAD `min.js` patch, and then apply it:
 
 ```bash
 wget -q -O example_webpage/openjscad_min_js_231d3c6.patch https://raw.githubusercontent.com/sdaau/openjscad_example_selfhost_spa_webpage/master/_files/openjscad_min_js_231d3c6.patch
 ```
 
-Change to the directory of the min.js using a subshell (so we do not have to cd back)
+Change to the directory of the `min.js` using a subshell (so we do not have to `cd` back):
 
 ```bash
 (
@@ -136,8 +136,8 @@ echo "example_webpage is ready at: $(readlink -f example_webpage)"
 
 You can upload that directory to your webserver.
 
-Due to XHR loading of .jscad file, opening `example_webpage.html`
-in browser via file:// protocol (e.g. when you double-click the
+Due to XHR loading of `.jscad` file, opening `example_webpage.html`
+in browser via `file://` protocol (e.g. when you double-click the
 .html icon in your OS GUI) will **not** work.
 
 Therefore, as test, the script here starts a local `python3` http.server
