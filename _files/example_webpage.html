@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <title>OpenJSCAD example of selfhosted SPA (single page application) webpage</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <meta http-equiv=Pragma content=no-cache>
+  <meta http-equiv=Expires content=-1>
+  <meta http-equiv=CACHE-CONTROL content=NO-CACHE,NO-STORE,MUST-REVALIDATE>
+
+  <link rel="stylesheet" href="css/custom-example.css">
+
+  <link rel="icon" type="image/png" href="imgs/favicon.png">
+
+  <link rel="stylesheet" href="openjscad_dist/min.css" type="text/css">
+  <script src="openjscad_dist/min.js"></script>
+
+  <script src="example_webpage_init.js"></script>
+
+</head>
+<body>
+
+  <!-- Load .jscad script, bypassing XHR? (SO:984871)
+  onload="this.remove();" removed - but no work;
+  Have to use srcdoc attribute, src triggers a download prompt (SO:4199458)
+  <iframe srcdoc="skab.jscad" style="display: none;" id="jscad_iframe"></iframe>
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+  <div id="container">
+
+    <section>
+      <h2>OpenJSCAD example of selfhosted SPA (single page application) webpage</h2>
+    </section>
+
+    <div id="dimensions">
+      <h6>Dimensions</h6>
+
+      <table>
+        <thead>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Width:</td>
+            <td><span class="numright" id="width_units">1150</span> units</td>
+          </tr>
+          <tr>
+            <td>Height:</td>
+            <td><span class="numright" id="height_units">2000</span> units</td>
+          </tr>
+          <tr>
+            <td>Thickness:</td>
+            <td>
+              <form method="get" id="form1" class="rst">
+                <input type="text" id="thick_units" name="thick_units" class="numright" placeholder="15"/> units
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="submit">Recalculate</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div><!-- id dimensions -->
+
+    <div id="3dview">
+      <h6>3D View</h6>
+
+      <div>
+        <div style="margin-bottom: 1rem;"><small>
+          Usage:
+          <b>Rotate XZ</b>: Left Mouse ;
+          <b>Pan</b>: Middle Mouse or SHIFT + Left Mouse ;
+          <b>Rotate XY</b>: Right Mouse or ALT + Left Mouse ;
+          <b>Zoom In/Out</b>: Wheel Mouse or CTRL + Left Mouse
+        </small></div>
+      </div>
+
+      <div class="jscad-container">
+        <!-- setup display of the errors as required by OpenJSCAD.js -->
+        <div id="header">
+          <div id="errordiv">Error loading .jscad</div>
+        </div>
+
+        <!-- setup display of the viewer, i.e. canvas -->
+        <!-- removed attribute: design-url="examples/logo.jscad" -->
+        <div oncontextmenu="return false;" id="viewerContext" ></div>
+
+        <!-- setup display of the status, as required by OpenJSCAD.js -->
+        <!-- set display: block to display this -->
+        <div id="tail" style="display: none;">
+          <div id="statusdiv"></div>
+        </div>
+      </div><!-- class jscad-container -->
+    </div><!-- id 3dview -->
+
+    <div id="svgslice">
+      <h6>SVG slice</h6>
+      <div class="svghold" id="svgholder">
+      </div><!-- id svgholder -->
+    </div><!-- id svgslice -->
+
+  </div><!-- class container -->
+
+</body>
+</html>

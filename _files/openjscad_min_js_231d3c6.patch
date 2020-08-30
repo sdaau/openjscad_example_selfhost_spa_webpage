@@ -1,0 +1,108 @@
+diff --git a/packages/web/dist/min.js b/packages/web/dist/min.js
+index 4533d95..62e4ca6 100644
+--- a/packages/web/dist/min.js
++++ b/packages/web/dist/min.js
+@@ -7,6 +7,8 @@ const { replaceIncludes } = require('../code-loading/replaceIncludes')
+ const { resolveIncludesHttp } = require('../code-loading/resolveIncludesHttp')
+ const { toArray } = require('../utils/arrays')
+ 
++//console.log("wwindow", window); // window is here; but Cannot find module '@jscad/io', '@jscad/core/io/prepareOutput'
++
+ /**
+  * evaluate script & rebuild solids, in main thread
+  * @param {String} script the script
+@@ -83,12 +85,18 @@ function rebuildSolidsInWorker (script, fullurl, parameters, callback, options)
+     // we need to create special options as you cannot send functions to webworkers
+       const workerOptions = {implicitGlobals: options.implicitGlobals}
+       worker.onmessage = function (e) {
++        //console.log("onmessage1", window); //callback, e); // this reacts on 'rendered', runs in loop(); callback is function builder; window is defined here
++        if (e.data.cmd == "openjscad_pass") { // HACK for browser!
++          postMessage(e.data) // propagates to window.onmessage!
++        }
++        else
+         if (e.data instanceof Object) {
+           const data = e.data.objects.map(function (object) {
+             if (object['class'] === 'CSG') { return CSG.fromCompactBinary(object) }
+             if (object['class'] === 'CAG') { return CAG.fromCompactBinary(object) }
+           })
+           callback(undefined, data)
++          //postMessage({'msg': 'onmessage1'}) // propagates to window.onmessage!
+         }
+       }
+       worker.onerror = function (e) {
+@@ -109,6 +117,7 @@ module.exports = {
+   rebuildSolids,
+   rebuildSolidsInWorker
+ }
++window.oscad = oscad;//HACK for browser; has oscad.csg.CAG and oscad.csg.CSG
+ 
+ },{"../code-loading/jscad-function":2,"../code-loading/jscad-worker.js":3,"../code-loading/replaceIncludes":4,"../code-loading/resolveIncludesHttp":5,"../utils/arrays":120,"@jscad/csg":18,"@jscad/csg/api":17,"webworkify":114}],2:[function(require,module,exports){
+ /**
+@@ -172,6 +181,7 @@ const { toArray } = require('../utils/arrays')
+  */
+ module.exports = function (self) {
+   self.onmessage = function (e) {
++    //console.log("onmessage2", e); // hits only once (main()?)
+     if (e.data instanceof Object) {
+       var data = e.data
+       if (data.cmd === 'render') {
+@@ -563,6 +573,7 @@ function prepareOutput (objects, params) {
+ module.exports = {
+   prepareOutput
+ }
++window.prepareOutput = prepareOutput; //HACK for browser
+ 
+ },{"../utils/mergeSolids":121,"./formats":7,"@jscad/io":90}],9:[function(require,module,exports){
+ const inchMM = (1 / 0.039370) // used for scaling AMF (inch) to CAG coordinates(MM)
+@@ -1682,7 +1693,7 @@ const {isCAG, isCSG} = require('./src/core/utils')
+ 
+ const globalApi = Object.assign({}, {CSG, CAG}, optionsParsers, {isCAG, isCSG})
+ 
+-module.exports = globalApi
++module.exports = globalApi // window not defined here
+ 
+ },{"./src/api/debugHelpers":23,"./src/api/optionParsers":34,"./src/api/primitives2d":36,"./src/api/primitives3d":38,"./src/core/CAG":41,"./src/core/CAGFactories":42,"./src/core/CSG":43,"./src/core/CSGFactories":44,"./src/core/Properties":48,"./src/core/connectors":49,"./src/core/constants":50,"./src/core/math/Line2":51,"./src/core/math/Line3":52,"./src/core/math/Matrix4":53,"./src/core/math/OrthoNormalBasis":54,"./src/core/math/Path2":55,"./src/core/math/Plane":56,"./src/core/math/Polygon2":57,"./src/core/math/Polygon3":58,"./src/core/math/Side":59,"./src/core/math/Vector2":60,"./src/core/math/Vector3":61,"./src/core/math/Vertex2":62,"./src/core/math/Vertex3":63,"./src/core/mutators":66,"./src/core/utils":68}],19:[function(require,module,exports){
+ const Path2D = require('../core/math/Path2')
+@@ -18534,6 +18545,7 @@ const jsonDeSerializer = require('@jscad/json-deserializer')
+ const objDeSerializer = require('@jscad/obj-deserializer')
+ const stlDeSerializer = require('@jscad/stl-deserializer')
+ const svgDeSerializer = require('@jscad/svg-deserializer')
++window.svgSerializer = svgSerializer; //HACK for browser
+ 
+ module.exports = {
+   makeBlob,
+@@ -46629,6 +46641,8 @@ var _require6 = require('@jscad/core/io/formats'),
+ var _require7 = require('../io/utils'),
+     revokeBlobUrl = _require7.revokeBlobUrl;
+ 
++//var _require8 = require('@jscad/csg'), // Cannot find module '@jscad/csg', '../csg' ...
++
+ var Viewer = require('../ui/viewer/jscad-viewer');
+ 
+ function Processor(containerdiv, options) {
+@@ -47444,6 +47458,8 @@ var AlertUserOfUncaughtExceptions = require('./errorDispatcher');
+ var version = require('../../package.json').version;
+ var Processor = require('../jscad/processor');
+ 
++//const { CAG, CSG } = require('@jscad/csg'); // cannot here
++
+ var gProcessor = null;
+ 
+ function init() {
+@@ -47475,6 +47491,8 @@ function init() {
+     };
+     xhr.send();
+   }
++
++  window.gProcessor = gProcessor; // HACK for browser!
+ }
+ 
+ document.addEventListener('DOMContentLoaded', function (event) {
+@@ -49360,6 +49378,7 @@ var GL = function () {
+ 				canvas.height = options.height || 600;
+ 			}
+ 			if (!('alpha' in options)) options.alpha = false;
++			if (!('preserveDrawingBuffer' in options)) options.preserveDrawingBuffer = true;//HACK for browser (Firefox print https://bugzilla.mozilla.org/show_bug.cgi?id=976173 ; see also SO:764520)
+ 			try {
+ 				gl = canvas.getContext('webgl', options);
+ 			} catch (e) {}

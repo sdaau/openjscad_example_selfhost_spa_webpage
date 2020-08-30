@@ -1,0 +1,24 @@
+.numright {
+display: inline-block;
+width: 5rem;
+text-align: right;
+}
+div.svghold {
+/* border: 1px solid red; */
+padding: 0;
+margin: 0;
+/* text-align: center; */
+}
+svg{
+display: block;
+margin-top: auto;
+margin-bottom: auto;
+}
+
+/* overload some style settings of OpenJSCAD */
+div.jscad-container {
+min-width: unset;
+}
+div#viewerContext {
+width: unset;
+}
