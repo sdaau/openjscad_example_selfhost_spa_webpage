@@ -76,7 +76,6 @@ function readJscadTextFile(file) // SO:14446447
 }
 
 function SetJSCadCode(inCodeText) {
-  console.log("SetJSCadCode(inCodeText)", inCodeText);
   design = 'MyDesign.jscad'; // just a filename, apparently
   //alert("B" + width_units);
   // well, somehow, even if alert and console.log (inside inCodeText!) do show this global width_units without a problem (the first two times that code is executed), the third time it is "ReferenceError: width_units is not defined" - and that is, in spite of the 3D being drawn ?!?!
@@ -130,11 +129,24 @@ function SetJSCadCode(inCodeText) {
 function showResultsList() {
   //window.resultsList
   for (var ckey in window.resultsList) {
+    // generate .svg of the sectionCuts of the objects passed from .jscad script:
     let tobj = window.resultsList[ckey];
     tobj.cagSectionCut = window.oscad.csg.CAG.fromCompactBinary(tobj.sectionCut);
     tobj.svg = window.prepareOutput(tobj.cagSectionCut, {format: "svg"})
     //console.log("showResultsList", tobj.count, tobj.size, tobj.sectionCut, tobj.cagSectionCut, tobj.svg);
   }
+
+  // show one of the .svgs
+  let svgHolderDivRef = document.getElementById('svgholder');
+  let svgObjNameRef = document.getElementById('svgobjname');
+  let chosen_idx_key = 1;
+  let tobj = window.resultsList[chosen_idx_key];
+  svgObjNameRef.appendChild( document.createTextNode( tobj.name ) );
+  svgHolderDivRef.innerHTML = tobj.svg.data[0];
+  // access the only <g> element in .svg, and fill it with color
+  let colstr = tobj.color.map(function(val) { return Math.round(val*255); }).join(",");
+  colstr = "rgb(" + colstr + ")";
+  svgHolderDivRef.children[0].children[0].setAttribute("fill", colstr);
 }
 
 

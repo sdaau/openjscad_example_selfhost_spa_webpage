@@ -19,12 +19,14 @@ var thick_base_units = 30;
 //console.log(gProcessor.viewer.options.camera); //gProcessor is not defined here
 //console.log(viewer); //viewer is not defined here
 
+var NUMDECIMALS=10;
+
 var scalefact = 100;
 var width_base = width_base_units/scalefact;
-var depth_base = depth_base_units/scalefact;
+var height_base = height_base_units/scalefact;
 var thick_base = thick_base_units/scalefact;
 var width = width_units/scalefact;
-var depth = depth_units/scalefact;
+var height = height_units/scalefact;
 var thick = thick_units/scalefact;
 
 // note: can add fourth coordinate for alpha transparency, but it does not blend!
@@ -51,13 +53,17 @@ function getGeometry() {
   object_base.name = "object_base";
   all_objects.push( object_base );
 
-  var object_rotator = cube({size: [width, height, thick]}).setColor(color_rt).translate([brdthick, 0, brdthick]);
+  var object_rotator = cube({size: [width, height, thick]}).setColor(color_rt);
   // assign new extra properties:
   //object_rotator.mycolor = color_rt; // not here
   //all_objects.push( object_rotator ); // don't add here - add it after it is rotated
 
   // perform rotation animation (rotate around axis and point: SO:45826208):
+  object_rotator = object_rotator.translate([-width_base/2, -height_base/2, -0.25*height]);
+  object_rotator = object_rotator.rotateX(90);
+  object_rotator = object_rotator.rotateY(-45);
   object_rotator = object_rotator.rotateZ(-r_angle);
+  object_rotator = object_rotator.translate([width_base/2, height_base/2, 0.25*height]);
   object_rotator.mycolor = color_rt;
   object_rotator.name = "object_rotator";
   all_objects.push( object_rotator );
