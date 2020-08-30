@@ -45,7 +45,6 @@ function mypage_init() {
   //~ }, false);
   width_units = parseInt( document.getElementById("width_units").innerHTML );
   height_units = parseInt( document.getElementById("height_units").innerHTML );
-  depth_units = parseInt( document.getElementById("depth_units").innerHTML );
   thick_units = parseInt( my_thick_units.value );
   //alert("A" + width_units);
 }
@@ -55,7 +54,7 @@ function post_openjscad_init() {
   //note: must add `window.gProcessor = gProcessor;` at end of init() in min.js, to have gProcessor available here!
   console.log("post_openjscad_init" + gProcessor);
   //console.log(document.getElementById("jscad_iframe").contentDocument); // .document is undefined
-  readJscadTextFile("skab.jscad");
+  readJscadTextFile("example_scene.jscad");
 }
 
 function readJscadTextFile(file) // SO:14446447
@@ -77,6 +76,7 @@ function readJscadTextFile(file) // SO:14446447
 }
 
 function SetJSCadCode(inCodeText) {
+  console.log("SetJSCadCode(inCodeText)", inCodeText);
   design = 'MyDesign.jscad'; // just a filename, apparently
   //alert("B" + width_units);
   // well, somehow, even if alert and console.log (inside inCodeText!) do show this global width_units without a problem (the first two times that code is executed), the third time it is "ReferenceError: width_units is not defined" - and that is, in spite of the 3D being drawn ?!?!

@@ -1,0 +1,7 @@
+
+# NOTE: this is only needed, if you use an Apache web server;
+# since `example_webpage_init.js` loads `example_scene.jscad` via XMLHttpRequest (XHR),
+# by default the .jscad is treated as XML - but since it is not XML,
+# it will raise an error in Firefox JS console (`XML Parsing Error: syntax error` for the .jscad, `Line Number 2, Column 1:`)
+# so with this, we force the Apache server to return a `text/plain` MIME type for .jscad files, so Firefox will not try to parse them as XML (and fail, and output error message):
+AddType text/plain .jscad
